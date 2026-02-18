@@ -38,7 +38,7 @@
             padding: 18px 25px;
             text-align: center;
             position: relative;
-            z-index: 9999;
+            z-index: 10000;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             display: flex;
             justify-content: center;
@@ -94,6 +94,13 @@
         @keyframes slideDown {
             from { transform: translateY(-100%); }
             to { transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .interview-banner { flex-direction: column; gap: 10px; padding: 20px; }
+            .banner-content { flex-direction: column; align-items: flex-start; gap: 8px; margin-right: 0; }
+            .banner-label { font-size: 0.8rem; }
+            .banner-text { font-size: 0.95rem; text-align: left; }
         }
 
         .container {
@@ -204,7 +211,7 @@
             z-index: 1;
         }
 
-        /* TICKER */
+        /* LIVE STATS TICKER */
         .live-ticker {
             background: linear-gradient(90deg, #0a0a0a, #1a1a1a, #0a0a0a);
             padding: 15px;
@@ -246,7 +253,7 @@
             50% { opacity: 0.3; }
         }
 
-        /* GRID & CARDS */
+        /* STATS GRID */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -265,11 +272,27 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--mikes-yellow), transparent);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+
         .stat-card:hover {
             transform: translateY(-8px);
             border-color: var(--mikes-yellow);
             box-shadow: 0 20px 60px rgba(251,211,4,0.3);
         }
+
+        .stat-card:hover::before { opacity: 0.1; }
 
         .stat-icon {
             font-size: 3rem;
@@ -318,6 +341,7 @@
             border-top-color: #333;
         }
 
+        /* SECTIONS */
         .global-section {
             background: var(--card-bg);
             border-radius: 25px;
@@ -355,18 +379,26 @@
             transition: all 0.3s;
         }
 
-        .geo-card.us { border-top: 4px solid var(--mikes-yellow); }
-        .geo-card.canada { border-top: 4px solid var(--canada-red); }
-        .geo-card.mexico { border-top: 4px solid var(--mexico-green); }
-        .geo-card.global { border-top: 4px solid var(--accent-blue); }
-
-        .geo-count {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--mikes-yellow);
-            display: block;
-            margin: 10px 0;
+        .geo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent);
         }
+
+        .geo-card.us::before { background: var(--mikes-yellow); }
+        .geo-card.canada::before { background: var(--canada-red); }
+        .geo-card.mexico::before { background: var(--mexico-green); }
+        .geo-card.global::before { background: var(--accent-blue); }
+
+        .geo-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .geo-flag { font-size: 3rem; margin-bottom: 15px; display: block; }
+        .geo-location { font-size: 1.3rem; font-weight: 700; color: var(--text-white); margin-bottom: 10px; }
+        .geo-count { font-size: 2.5rem; font-weight: 900; color: var(--mikes-yellow); display: block; margin: 10px 0; }
+        .geo-label { font-size: 0.85rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; }
 
         /* TIMELINE */
         .journey-section {
@@ -381,6 +413,7 @@
         .timeline-container {
             position: relative;
             padding: 40px 0;
+            margin: 40px 0;
         }
 
         .timeline-container::before {
@@ -398,8 +431,7 @@
             padding-left: 80px;
             margin-bottom: 40px;
             opacity: 0;
-            transform: translateX(-30px);
-            transition: all 0.6s ease-out;
+            animation: slideInLeft 0.6s ease-out forwards;
         }
 
         .timeline-marker {
@@ -414,6 +446,7 @@
             align-items: center;
             justify-content: center;
             font-weight: 900;
+            font-size: 1rem;
             color: var(--mikes-yellow);
             z-index: 2;
         }
@@ -424,8 +457,44 @@
             border-radius: 15px;
             padding: 25px;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
+        .timeline-content:hover { border-color: var(--mikes-yellow); transform: translateX(5px); }
+        .timeline-title { font-size: 1.3rem; font-weight: 700; color: var(--text-white); margin-bottom: 8px; }
+        .timeline-stats { font-size: 0.95rem; color: var(--mikes-yellow); margin-bottom: 10px; font-weight: 600; }
+        .timeline-desc { font-size: 0.9rem; color: var(--text-gray); line-height: 1.5; }
+
+        /* GROWTH CHART */
+        .growth-chart {
+            margin-top: 60px;
+            padding: 30px;
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border-radius: 15px;
+            border: 1px solid #333;
+        }
+
+        .chart-title-small {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .growth-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s ease-out forwards;
+        }
+
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+        .data-point { opacity: 0; animation: fadeIn 0.5s ease-out forwards; }
+
+        /* METHODS GRID */
         .methods-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -439,9 +508,37 @@
             border-radius: 15px;
             padding: 30px;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .method-card:hover { border-color: var(--mikes-yellow); transform: translateY(-5px); }
+        .method-icon { font-size: 2.5rem; margin-bottom: 15px; display: block; }
+        .method-title { font-size: 1.2rem; font-weight: 700; color: var(--mikes-yellow); margin-bottom: 10px; }
+        .method-desc { font-size: 0.9rem; color: var(--text-gray); line-height: 1.6; }
+        .method-metric {
+            display: inline-block;
+            background: rgba(251,211,4,0.1);
+            border: 1px solid rgba(251,211,4,0.3);
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 0.75rem;
+            color: var(--mikes-yellow);
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        /* QUOTE & IMPACT */
+        .quote-section { text-align: center; padding: 40px 20px; position: relative; }
+        .quote-text {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-style: italic;
+            color: var(--mikes-yellow);
+            font-weight: 600;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.4;
+            position: relative;
+        }
 
         .impact-bar {
             display: flex;
@@ -455,16 +552,18 @@
             border: 1px solid #333;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .interview-banner { flex-direction: row; align-items: flex-start; padding: 20px; }
-            .banner-content { flex-direction: column; align-items: flex-start; gap: 8px; margin-right: 15px; }
-            .timeline-container::before { left: 15px; }
-            .timeline-item { padding-left: 60px; }
-            .timeline-marker { width: 50px; height: 50px; }
-        }
+        .impact-number { font-size: 2.5rem; font-weight: 900; color: var(--mikes-yellow); display: block; }
+        .impact-label { font-size: 0.85rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
 
-        .animate-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .animate-in { animation: slideUp 0.8s ease-out forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
     </style>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V6399H6P2K"></script>
     <script>
@@ -475,7 +574,6 @@
     </script>
 </head>
 <body>
-
     <div id="interview-banner" class="interview-banner">
         <div class="banner-content">
             <span class="banner-label">Presentation Context:</span>
@@ -485,7 +583,6 @@
     </div>
 
     <div class="container">
-        
         <header class="hero">
             <h1>The <span class="squeeze">Squeeze</span></h1>
             <p class="subtitle">Sustainable Adoption Through Internal Champions</p>
@@ -501,107 +598,103 @@
                 <div class="ticker-item"><span class="ticker-dot"></span> 500-800 daily active learners worldwide</div>
                 <div class="ticker-item"><span class="ticker-dot"></span> Train-the-trainer model driving sustainability</div>
                 <div class="ticker-item"><span class="ticker-dot"></span> Regional champions enabled to localize delivery</div>
-                <div class="ticker-item"><span class="ticker-dot"></span> Ongoing governance established</div>
+                <div class="ticker-item"><span class="ticker-dot"></span> Ongoing governance & reporting established</div>
                 <div class="ticker-item"><span class="ticker-dot"></span> From siloed training to unified approach</div>
                 <div class="ticker-item"><span class="ticker-dot"></span> 500-800 daily active learners worldwide</div>
+                <div class="ticker-item"><span class="ticker-dot"></span> Train-the-trainer model driving sustainability</div>
+                <div class="ticker-item"><span class="ticker-dot"></span> Regional champions enabled to localize delivery</div>
+                <div class="ticker-item"><span class="ticker-dot"></span> Ongoing governance & reporting established</div>
             </div>
         </div>
 
-        <section class="stats-grid">
-            <div class="stat-card animate-in">
+        <div class="stats-grid">
+            <div class="stat-card animate-in delay-1">
                 <span class="stat-icon">📈</span>
                 <span class="stat-number counter" data-target="80">0</span><span class="stat-number">%</span>
                 <span class="stat-label">Sustained Adoption</span>
-                <p class="stat-detail">Adjusted for active weekly logins vs. provisioned licenses. Grew from 20% baseline to 80% across full portfolio.</p>
+                <p class="stat-detail">Grew from <20% baseline to 80% across full portfolio expansion.</p>
             </div>
-
-            <div class="stat-card animate-in">
+            <div class="stat-card animate-in delay-2">
                 <span class="stat-icon">✅</span>
-                <span class="stat-number">100%</span>
+                <span class="stat-number">100<span style="font-size: 0.6em;">%</span></span>
                 <span class="stat-label">YoY Compliance</span>
-                <p class="stat-detail">Zero critical audit failures across all regions. All regional managers certified within deadline.</p>
+                <p class="stat-detail">Zero critical audit failures across all regions.</p>
             </div>
-
-            <div class="stat-card animate-in">
+            <div class="stat-card animate-in delay-3">
                 <span class="stat-icon">⚡</span>
-                <span class="stat-number">-20%</span>
+                <span class="stat-number">-20<span style="font-size: 0.6em;">%</span></span>
                 <span class="stat-label">Sales Lead Time</span>
-                <p class="stat-detail">Reduced time-to-competency from 5 weeks to 4 weeks, accelerating revenue pipeline.</p>
+                <p class="stat-detail">Reduced time-to-competency from 5 weeks to 4 weeks.</p>
             </div>
-
-            <div class="stat-card animate-in">
+            <div class="stat-card animate-in delay-4">
                 <span class="stat-icon">👥</span>
                 <span class="stat-number counter" data-target="6000">0</span><span class="stat-number">+</span>
                 <span class="stat-label">Global Users</span>
-                <p class="stat-detail">Logistics, sales, brewery ops, and marketing across 12 countries.</p>
+                <p class="stat-detail">Scaled from 200 MAUs to 6,000+ in 18 months across 12 countries.</p>
             </div>
-        </section>
+        </div>
 
-        <section class="global-section">
+        <section class="global-section" style="background: linear-gradient(135deg, #1a1a1a, #0a0a0a);">
             <h2 class="section-title">The Enablement Strategy</h2>
             <div class="methods-grid">
-                <div class="method-card">
-                    <span class="method-icon">🏆</span>
-                    <div class="method-title">Leaderboards</div>
-                    <p class="method-desc">Real-time competitive rankings drove completion velocity and daily check-ins.</p>
-                </div>
-                <div class="method-card">
-                    <span class="method-icon">🎁</span>
-                    <div class="method-title">Prize Store</div>
-                    <p class="method-desc">Points-based rewards marketplace for branded merchandise and gift cards.</p>
-                </div>
-                <div class="method-card">
-                    <span class="method-icon">📱</span>
-                    <div class="method-title">Mobile-First</div>
-                    <p class="method-desc">Offline access and push notifications for field teams and logistics workers.</p>
-                </div>
+                <div class="method-card"><span class="method-icon">🏆</span><div class="method-title">Leaderboards</div><p class="method-desc">Real-time competitive rankings across teams.</p><span class="method-metric">40% engagement boost</span></div>
+                <div class="method-card"><span class="method-icon">🎁</span><div class="method-title">Prize Store</div><p class="method-desc">Points-based rewards marketplace for branded merch.</p><span class="method-metric">2,400+ prizes redeemed</span></div>
+                <div class="method-card"><span class="method-icon">💬</span><div class="method-title">Social Learning</div><p class="method-desc">Peer-to-peer knowledge sharing through comments.</p><span class="method-metric">12,000+ comments</span></div>
+                <div class="method-card"><span class="method-icon">📱</span><div class="method-title">Mobile-First</div><p class="method-desc">Offline access for field teams and logistics.</p><span class="method-metric">75% mobile usage</span></div>
+                <div class="method-card"><span class="method-icon">📊</span><div class="method-title">Feedback Loops</div><p class="method-desc">Survey completion competitions improved content quality.</p><span class="method-metric">85% response rate</span></div>
+                <div class="method-card"><span class="method-icon">🎓</span><div class="method-title">Certifications</div><p class="method-desc">Standardized certification pathways across all teams.</p><span class="method-metric">6,000+ certs issued</span></div>
             </div>
         </section>
 
         <section class="global-section">
             <h2 class="section-title">Global Footprint</h2>
             <div class="geo-grid">
-                <div class="geo-card us">
-                    <span class="geo-flag">🇺🇸</span>
-                    <div class="geo-location">United States</div>
-                    <span class="geo-count counter" data-target="3550">0</span>
-                    <div class="geo-label">Active Learners</div>
-                </div>
-                <div class="geo-card canada">
-                    <span class="geo-flag">🇨🇦</span>
-                    <div class="geo-location">Canada</div>
-                    <span class="geo-count counter" data-target="800">0</span>
-                    <div class="geo-label">Active Learners</div>
-                </div>
-                <div class="geo-card global">
-                    <span class="geo-flag">🌍</span>
-                    <div class="geo-location">Global Ops</div>
-                    <span class="geo-count counter" data-target="1000">0</span>
-                    <div class="geo-label">Active Learners</div>
-                </div>
+                <div class="geo-card us" style="--accent: var(--mikes-yellow);"><span class="geo-flag">🇺🇸</span><div class="geo-location">United States</div><span class="geo-count counter" data-target="3550">0</span><div class="geo-label">Active Learners</div></div>
+                <div class="geo-card canada" style="--accent: var(--canada-red);"><span class="geo-flag">🇨🇦</span><div class="geo-location">Canada</div><span class="geo-count counter" data-target="800">0</span><div class="geo-label">Active Learners</div></div>
+                <div class="geo-card mexico" style="--accent: var(--mexico-green);"><span class="geo-flag">🇲🇽</span><div class="geo-location">Mexico</div><span class="geo-count counter" data-target="650">0</span><div class="geo-label">Active Learners</div></div>
+                <div class="geo-card global" style="--accent: var(--accent-blue);"><span class="geo-flag">🌍</span><div class="geo-location">Global Ops</div><span class="geo-count counter" data-target="1000">0</span><div class="geo-label">Active Learners</div></div>
+            </div>
+            <div class="impact-bar">
+                <div class="impact-item"><span class="impact-number">12</span><span class="impact-label">Countries</span></div>
+                <div class="impact-item"><span class="impact-number">24/7</span><span class="impact-label">Access</span></div>
+                <div class="impact-item"><span class="impact-number">9</span><span class="impact-label">Languages</span></div>
+                <div class="impact-item"><span class="impact-number">4</span><span class="impact-label">Time Zones</span></div>
             </div>
         </section>
 
         <section class="journey-section">
-            <h2 class="section-title">Audit → Analyze → Scale</h2>
+            <h2 class="section-title">The Methodology: Audit → Analyze → Scale</h2>
             <div class="timeline-container">
-                <div class="timeline-item">
-                    <div class="timeline-marker">1</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">Discovery & Assessment</div>
-                        <div class="timeline-desc">Mapped workflows and identified silos across compliance and operations.</div>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker">2</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">Global Standardization</div>
-                        <div class="timeline-desc">Standardized playbooks and localized delivery via regional champions.</div>
-                    </div>
-                </div>
+                <div class="timeline-item"><div class="timeline-marker">AUDIT</div><div class="timeline-content"><div class="timeline-title">🔍 Discovery & Assessment</div><div class="timeline-stats">Mike's Hard baseline • 200 MAUs</div><div class="timeline-desc">Interviewed leaders, mapped workflows, identified gaps.</div></div></div>
+                <div class="timeline-item"><div class="timeline-marker">ANALYZE</div><div class="timeline-content"><div class="timeline-title">📊 Metrics & Baselines</div><div class="timeline-stats">Completion rates • Adoption</div><div class="timeline-desc">Established measurement framework.</div></div></div>
+                <div class="timeline-item"><div class="timeline-marker">PILOT</div><div class="timeline-content"><div class="timeline-title">🎯 Exec Review & Soft Launch</div><div class="timeline-stats">Leadership buy-in • Internal champions</div><div class="timeline-desc">Facilitated walkthroughs, built train-the-trainer model.</div></div></div>
+                <div class="timeline-item"><div class="timeline-marker">EXPAND</div><div class="timeline-content"><div class="timeline-title">🚀 Portfolio Rollout</div><div class="timeline-stats">+3,300 users • Portfolio-wide</div><div class="timeline-desc">Scaled gamification tactics and feedback loops.</div></div></div>
+                <div class="timeline-item"><div class="timeline-marker">SCALE</div><div class="timeline-content"><div class="timeline-title">🌍 Global Standardization</div><div class="timeline-stats">6,000 users • 12 countries</div><div class="timeline-desc">Localized delivery and ongoing governance models.</div></div></div>
+            </div>
+
+            <div class="growth-chart">
+                <div class="chart-title-small">User Growth Curve</div>
+                <svg viewBox="0 0 600 200" style="width: 100%; height: 200px;">
+                    <defs><linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#666" /><stop offset="100%" stop-color="#FBD304" /></linearGradient></defs>
+                    <line x1="0" y1="180" x2="600" y2="180" stroke="#333" stroke-width="1"/><polyline points="0,175 120,170 240,140 360,80 480,30 600,20" fill="none" stroke="url(#line-gradient)" stroke-width="4" stroke-linecap="round" class="growth-line"/><circle cx="0" cy="175" r="6" fill="#FBD304" class="data-point"/><circle cx="120" cy="170" r="6" fill="#FBD304" class="data-point"/><circle cx="240" cy="140" r="6" fill="#FBD304" class="data-point"/><circle cx="360" cy="80" r="6" fill="#FBD304" class="data-point"/><circle cx="480" cy="30" r="6" fill="#FBD304" class="data-point"/><circle cx="600" cy="20" r="6" fill="#FBD304" class="data-point"/>
+                </svg>
             </div>
         </section>
 
+        <section class="journey-section">
+            <h2 class="section-title">Business Impact</h2>
+            <div class="stats-grid" style="margin-top: 40px;">
+                <div class="stat-card"><span class="stat-icon">📉</span><span class="stat-number">-20%</span><span class="stat-label">Sales Ramp Time</span><p class="stat-detail">New reps selling 1 week sooner = faster revenue.</p></div>
+                <div class="stat-card"><span class="stat-icon">🎯</span><span class="stat-number">100%</span><span class="stat-label">Audit Compliance</span><p class="stat-detail">Zero critical failures year-over-year.</p></div>
+                <div class="stat-card"><span class="stat-icon">🔄</span><span class="stat-number">+60%</span><span class="stat-label">Brand Consistency</span><p class="stat-detail">Marketing teams aligned across all touchpoints.</p></div>
+                <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-number">500-800</span><span class="stat-label">Daily Active Users</span><p class="stat-detail">Sustained engagement across all time zones.</p></div>
+            </div>
+        </section>
+
+        <footer class="quote-section">
+            <p class="quote-text">A standardized certification model was a game changer for our team.</p>
+            <p class="quote-author">— Regional Manager, Mark Anthony Brands</p>
+        </footer>
     </div>
 
     <script>
@@ -627,17 +720,23 @@
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
-                    entry.target.querySelectorAll('.counter').forEach(c => {
-                        if (!c.classList.contains('counted')) {
-                            animateCounter(c);
-                            c.classList.add('counted');
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        if (!counter.classList.contains('counted')) {
+                            animateCounter(counter);
+                            counter.classList.add('counted');
                         }
                     });
+                    if (entry.target.classList.contains('timeline-container')) {
+                        entry.target.querySelectorAll('.timeline-item').forEach((item, index) => {
+                            setTimeout(() => { item.style.opacity = '1'; item.style.transform = 'translateX(0)'; }, index * 100);
+                        });
+                    }
                 }
             });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.2 });
 
-        document.querySelectorAll('.stat-card, .geo-card, .timeline-item, .animate-in').forEach(el => observer.observe(el));
+        document.querySelectorAll('.stat-card, .geo-card, .journey-section, .global-section, .timeline-container').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
